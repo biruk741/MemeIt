@@ -106,6 +106,9 @@ dependencies {
     /*
         implementation 'com.facebook.fresco:animated-webp:1.11.0'
         implementation 'com.facebook.fresco:webpsupport:1.11.0'*/
+
+    implementation "com.mikepenz:materialdrawer:6.1.2"
+    implementation "androidx.annotation:annotation:1.0.0"
 }
 repositories {
     mavenCentral()

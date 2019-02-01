@@ -92,7 +92,7 @@ class BadgeAdapter(val context: Context) : RecyclerView.Adapter<MyViewHolder<Bad
             if (awardedBadges.contains(t)) {
                 itemView.alpha = 1f
             } else {
-                itemView.alpha = 0.8f
+                itemView.alpha = 0.5f
             }
             badgeLabelV.text = t.label
             badgeDescV.text = t.description

@@ -39,6 +39,7 @@ public class BottomNavigation extends LinearLayout {
     LayoutParams layoutParams;
 
     int selectedIndex;
+    int c;
 
     Menu menu;
     BottomNavigationView.OnNavigationItemSelectedListener onNavigationItemSelectedListener;
@@ -104,8 +105,9 @@ public class BottomNavigation extends LinearLayout {
     }
 
     public void select(int x, boolean fire) {
+        ((ImageView) getChildAt(selectedIndex)).setImageResource(getDrawableForItem(false));
         selectedIndex = x;
-        if(!isNotTintable(x))clearTints();
+        if(!isNotTintable(x))clearTints(c);
         setTinted(x);
         if (fire)
             onNavigationItemSelectedListener.onNavigationItemSelected(menu.getItem(x));
@@ -115,9 +117,38 @@ public class BottomNavigation extends LinearLayout {
         if (isNotTintable(x)) return;
         ImageView iv = (ImageView) getChildAt(x);
         iv.setColorFilter(selected_tint, PorterDuff.Mode.SRC_IN);
+        iv.setImageResource(getDrawableForItem(true));
+    }
+    public int getDrawableForItem(boolean fill){
+        int a;
+        switch (getSelectedIndex()){
+            case 0:
+                a=getIdFromString(!fill ? "home" : "home_fill");
+                break;
+            case 1:
+                a=getIdFromString(!fill ? "trending" : "trending_fill");
+                break;
+            case 2:
+                a=getIdFromString(!fill ? "create" : "create");
+                break;
+            case 3:
+                a=getIdFromString(!fill ? "favorites" : "favorites_fill");
+                break;
+            case 4:
+                a=getIdFromString(!fill ? "profile" : "profile_fill");
+                break;
+                default:a=getIdFromString(!fill ? "home" : "home_fill");
+        }
+        return a;
+    }
+    private String getStringFromId(int id){
+        return getResources().getResourceName(id);
+    }
+    private int getIdFromString(String s){
+        return getResources().getIdentifier(s,"drawable",getContext().getPackageName());
     }
 
-    private void clearTints() {
+    private void clearTints(int c) {
         for (int i = 0; i < getChildCount(); i++) {
             if (isNotTintable(i)) continue;
             ImageView iv = (ImageView) getChildAt(i);

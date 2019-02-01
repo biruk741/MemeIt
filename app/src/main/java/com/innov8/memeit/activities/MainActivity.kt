@@ -3,20 +3,23 @@ package com.innov8.memeit.activities
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.WindowManager
+import android.view.*
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ShareCompat
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.innov8.memeit.BuildConfig
 import com.innov8.memeit.R
 import com.innov8.memeit.adapters.MemeAdapters.MemeAdapter
+import com.innov8.memeit.commons.models.TypefaceManager
 import com.innov8.memeit.customViews.DrawableBadge
 import com.innov8.memeit.fragments.MemeListFragment
 import com.innov8.memeit.fragments.ProfileFragment
@@ -24,10 +27,23 @@ import com.innov8.memeit.loaders.FavoriteMemeLoader
 import com.innov8.memeit.loaders.HomeMemeLoader2
 import com.innov8.memeit.loaders.TrendingMemeLoader
 import com.memeit.backend.MemeItClient
+import com.memeit.backend.MemeItClient.context
 import com.memeit.backend.MemeItUsers
 import com.memeit.backend.call
+import com.mikepenz.materialdrawer.AccountHeader
+import com.mikepenz.materialdrawer.AccountHeaderBuilder
+import com.mikepenz.materialdrawer.Drawer
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder
 import kotlinx.android.synthetic.main.activity_main.*
+import com.mikepenz.materialdrawer.DrawerBuilder
+import com.mikepenz.materialdrawer.model.DividerDrawerItem
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
+import com.mikepenz.materialdrawer.model.interfaces.IProfile
+import io.fabric.sdk.android.services.settings.IconRequest.build
+
 
 abstract class MainActivity : AppCompatActivity() {
     private val titles = arrayOf("MemeIt", "Trending", "Favorites")
@@ -36,6 +52,7 @@ abstract class MainActivity : AppCompatActivity() {
     private val pagerAdapter by lazy {
         MyPagerAdapter(supportFragmentManager)
     }
+    private lateinit var mDrawerLayout: DrawerLayout
 
     companion object {
         fun start(context: Context, apply: Intent.() -> Unit = {}) {
@@ -63,49 +80,56 @@ abstract class MainActivity : AppCompatActivity() {
 
     private fun initUI(savedInstanceState: Bundle?) {
         setContentView(R.layout.activity_main)
-
+        mDrawerLayout = findViewById(R.id.drawer_layout)
         initToolbar()
         initBottomNav()
         main_viewpager.adapter = pagerAdapter
-        val sbd = SlidingRootNavBuilder(this)
-                .withSavedState(savedInstanceState)
-                .withContentClickableWhenMenuOpened(true)
-                .withRootViewElevationPx(5)
-                .withRootViewScale(0.65f)
-                .withMenuLayout(R.layout.drawer_menu_main)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            sbd.withToolbarMenuToggle(toolbar2)
+
+
+        val actionbar: ActionBar? = supportActionBar
+        actionbar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setHomeAsUpIndicator(R.drawable.ic_menu)
         }
-        val rootNav = sbd.inject()
-        findViewById<View>(R.id.aboutus).setOnClickListener {
-            startActivity(Intent(this@MainActivity, AboutActivity::class.java))
-            rootNav.closeMenu(false)
+
+        val navigationView: NavigationView = findViewById(R.id.nav_view)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            menuItem.isChecked = true
+            when(menuItem.itemId){
+                R.id.menu_notif -> {
+                    startActivity(Intent(this, NotificationActivity::class.java))
+                    true
+                }
+                R.id.menu_search ->{
+                    startActivity(Intent(this, SearchActivity::class.java))
+                    true
+                }
+                R.id.menu_settings -> {
+                    startActivity(Intent(context,SettingsActivity::class.java))
+                    true
+                }
+                R.id.menu_feedback -> {
+                    onFeedbackMenu()
+                    true
+                }
+                R.id.menu_invite -> {
+                    startActivity(ShareCompat.IntentBuilder.from(this)
+                            .setText("""Hey, let's make and share memes on MemeIt!|Download it here https://play.google.com/store/apps/details?id=com.innov8.memeit""".trimMargin())
+                            .setType("text/plain")
+                            .createChooserIntent())
+                    true
+                }
+
+                R.id.menu_aboutus -> {
+                    startActivity(Intent(context,AboutActivity::class.java))
+                    true
+                }
+            }
+            drawerLayout.closeDrawers()
+
+            true
         }
-        findViewById<View>(R.id.settings).setOnClickListener {
-            startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
-            rootNav.closeMenu(false)
-        }
-        findViewById<View>(R.id.menu_feedback).setOnClickListener {
-            onFeedbackMenu()
-            rootNav.closeMenu(false)
-        }
-        findViewById<View>(R.id.menu_invite).setOnClickListener {
-            val invite = """Hey, let's make and share memes on MemeIt!
-                |Download it here https://play.google.com/store/apps/details?id=com.innov8.memeit
-            """.trimMargin()
-            startActivity(ShareCompat.IntentBuilder.from(this)
-                    .setText(invite)
-                    .setType("text/plain")
-                    .createChooserIntent()
-            )
-            rootNav.closeMenu(false)
-        }
-        changeStatColor()/*
-        Handler().postDelayed({
-            startActivity(Intent(this, BadgeAwardDialogActivity::class.java).apply {
-                putExtra("badge", Badge.ofID("react_001"))
-            })
-        }, 3000)*/
     }
 
     abstract fun onFeedbackMenu()
@@ -186,6 +210,12 @@ abstract class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+//    private fun setDrawerFont(){
+//        val navView : NavigationView =  findViewById(R.id.navView)
+//        val m : Menu= navView.menu
+//        for(m:MenuItem in )
+//    }
+
     private fun loadNotifCount() {
         MemeItUsers.getNotifCount().call {
             notifItem?.icon = DrawableBadge.Builder(this)
@@ -197,12 +227,43 @@ abstract class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
-        when (item.itemId) {
-            R.id.menu_notif -> startActivity(Intent(this, NotificationActivity::class.java))
-            R.id.menu_search -> startActivity(Intent(this, SearchActivity::class.java))
+
+         return when (item.itemId) {
+            R.id.menu_notif -> {
+                startActivity(Intent(this, NotificationActivity::class.java))
+                true
+            }
+            R.id.menu_search ->{
+                startActivity(Intent(this, SearchActivity::class.java))
+                true
+            }
+            R.id.menu_settings -> {
+                startActivity(Intent(context,SettingsActivity::class.java))
+                true
+            }
+            R.id.menu_feedback -> {
+                onFeedbackMenu()
+                true
+            }
+            R.id.menu_invite -> {
+                startActivity(ShareCompat.IntentBuilder.from(this)
+                        .setText("""Hey, let's make and share memes on MemeIt!|Download it here https://play.google.com/store/apps/details?id=com.innov8.memeit""".trimMargin())
+                        .setType("text/plain")
+                        .createChooserIntent())
+                true
+            }
+
+            R.id.menu_aboutus -> {
+                startActivity(Intent(context,AboutActivity::class.java))
+                true
+            }
+            android.R.id.home ->{
+                mDrawerLayout.openDrawer(GravityCompat.START)
+                true
+            }
+
+             else -> super.onOptionsItemSelected(item)
         }
-        return true
     }
 
     override fun onResume() {

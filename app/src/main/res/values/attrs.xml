@@ -27,4 +27,13 @@
         <attr name="errorAction" format="string" />
     </declare-styleable>
 
+    <attr name="primaryColor" format="reference" />
+    <attr name="secondaryColor" format="reference" />
+    <attr name="accentColor" format="reference" />
+    <attr name="primaryText" format="reference" />
+    <attr name="secondaryText" format="reference" />
+    <attr name="primaryTextWhite" format="reference" />
+    <attr name="contentBackground" format="reference" />
+    <attr name="secondaryTextWhite" format="reference" />
+
 </resources>

@@ -25,7 +25,7 @@
 <!--==================================PROFILE DIMENS END=========================================-->
 
 
-    <dimen name="bottom_nav_items_padding">17dp</dimen>
+    <dimen name="bottom_nav_items_padding">16dp</dimen>
     <dimen name="bottom_nav_height">56dp</dimen>
     <dimen name="left_margin">24dp</dimen>
     <dimen name="follower_list_height">80dp</dimen>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="176dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#fff"
+    android:gravity="bottom"
+    android:orientation="vertical"
+
+    tools:layout_marginRight="46dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#27000000"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.innov8.memeit.commons.views.MemeItTextView
+        android:id="@+id/drawer_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:paddingBottom="14dp"
+        android:text="not_biruk"
+        android:textColor="#a0000000"
+        app:layout_constraintBottom_toTopOf="@+id/view"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.innov8.memeit.commons.views.MemeItTextView
+        android:id="@+id/drawer_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Birukster"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/drawer_username"
+        app:layout_constraintStart_toStartOf="@+id/drawer_username"
+        app:mfont="bold" />
+
+    <com.innov8.memeit.commons.views.ProfileDraweeView
+        android:id="@+id/drawer_pp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/drawer_name"
+        app:layout_constraintStart_toStartOf="@+id/drawer_username" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

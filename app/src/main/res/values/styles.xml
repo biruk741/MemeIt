@@ -6,10 +6,27 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name = "primaryText">@color/primaryText</item>
+        <item name = "secondaryText">@color/secondaryColor</item>
+        <item name= "primaryTextWhite">@color/white</item>
+        <item name= "secondaryTextWhite">@color/secondaryTextWhite</item>
+        <item name= "contentBackground">@color/whiteBackground</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <!--<item name="android:windowTranslucentStatus">true</item>-->
         <!--<item name="android:windowTranslucentNavigation">true</item>-->
+    </style>
+    <style name="DarkTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/darkPrimaryColor</item>
+        <item name="colorPrimaryDark">@color/darkPrimaryDarkColor</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name = "primaryText">@color/white</item>
+        <item name = "secondaryText">@color/secondaryTextWhite</item>
+        <item name= "primaryTextWhite">@color/white</item>
+        <item name="contentBackground">@color/blackBackground</item>
+        <item name= "secondaryTextWhite">@color/secondaryTextWhite</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
@@ -32,4 +49,7 @@
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
+    <color name="primaryText">#313131</color>
+    <color name="secondaryColor">#7000</color>
+    <color name="secondaryTextWhite">#87ffffff</color>
 </resources>
